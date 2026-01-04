@@ -5,7 +5,8 @@ This project is an ai object detection project that is designed for to detect co
 The command to start the notification system on imac or macbook is 
 pip3 install flask
 python3 imessage_server.py
-and for the raspberry pi it is 
+and for the raspberry pi it is
+
 1️⃣ Update system
 sudo apt update
 sudo apt upgrade -y
