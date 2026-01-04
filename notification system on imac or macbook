@@ -1,0 +1,50 @@
+from flask import Flask, request
+import subprocess
+import os
+import time
+
+app = Flask(__name__)
+
+UPLOAD_DIR = "/tmp/imessage_uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+
+@app.route("/send", methods=["POST"])
+def send_message():
+    phone = request.form.get("phone")
+    text = request.form.get("text", "")
+
+    image = request.files.get("image")
+    image_path = None
+
+    if image:
+        filename = f"artifact_{int(time.time())}.jpg"
+        image_path = os.path.join(UPLOAD_DIR, filename)
+        image.save(image_path)
+
+        subprocess.run([
+            "osascript",
+            "-e",
+            f'''
+            tell application "Messages"
+                send POSIX file "{image_path}" to buddy "{phone}"
+            end tell
+            '''
+        ])
+
+    if text:
+        subprocess.run([
+            "osascript",
+            "-e",
+            f'''
+            tell application "Messages"
+                send "{text}" to buddy "{phone}"
+            end tell
+            '''
+        ])
+
+    return "OK", 200
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
