@@ -92,5 +92,6 @@ Save → Exit
 journalctl -xe
 
 1️⃣5️⃣ Deactivate environment
+
 deactivate
 
